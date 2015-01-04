@@ -108,16 +108,12 @@ var Reading = React.createClass({
   },
 
   handleSpeechInput: function(text) {
-    // console.log('handleSpeechInput');
-    // console.log(text);
     text = text.trim();
     var words = text.split(' ');
 
     this.setState({ currentSpeech: text });
     this.forceUpdate();
 
-    // TODO do stuff here
-    var i = 0;
     words.forEach(function(word) {
       if (this.compareToCurrent_(word)) {
         this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
