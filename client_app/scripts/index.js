@@ -7,10 +7,10 @@ var CurrentStatus = React.createClass({
     return (
       <div className="reading__curent-status">
         <div className="reading__curent-status__text">
-          {this.props.text}
+          should say: {this.props.text}
         </div>
-        <div className="reading__curent-status__score">
-          {this.props.score}
+        <div className="reading__curent-status__speech">
+          should said: {this.props.speech}
         </div>
       </div>
     );
@@ -90,29 +90,52 @@ var Reading = React.createClass({
   },
 
   handleSpeechResult: function(e) {
-    console.log('on result:')
     for (var i = event.resultIndex; i < event.results.length; i += 1) {
       var result = event.results[i];
+      var transcript = result[0].transcript;
       if (result.isFinal) {
-        console.log('isFinal')
-        this.handleSpeechInput(event.results[i][0].transcript);
+        this.handleSpeechInput(transcript);
       } else {
-        console.log('is interimResults')
+        this.handleInteriumSpeechInput(transcript);
       }
-      console.log(event.results[i][0].transcript)
-      console.log(event.results[i][0].confidence)
     }
   },
 
-  handleSpeechInput: function(text) {
-    console.log('handleSpeechInput');
-    console.log(text);
+  handleInteriumSpeechInput: function(text) {
+    text = text.trim();
+    this.setState({ currentSpeech: text });
+    this.forceUpdate();
+  },
 
+  handleSpeechInput: function(text) {
+    // console.log('handleSpeechInput');
+    // console.log(text);
+    text = text.trim();
     var words = text.split(' ');
-    // pop off list and handle output
+
+    this.setState({ currentSpeech: text });
+    this.forceUpdate();
+
+    // TODO do stuff here
+    var i = 0;
+    words.forEach(function(word) {
+      if (this.compareToCurrent_(word)) {
+        this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
+        this.forceUpdate();
+      }
+
+    }, this);
   },
 
   // helper
+  formatWordForComparison: function(word) {
+    return word.replace(/\W/g, '').toLowerCase();
+  },
+
+  compareToCurrent_: function(word) {
+    return this.formatWordForComparison(word) === this.formatWordForComparison(this.currentWordText_());
+  },
+
   currentWordText_: function() {
     return this.state.data.length ? this.state.data[this.state.currentWordIdx]: '';
   },
@@ -126,14 +149,14 @@ var Reading = React.createClass({
     }, this);
 
     var currentWordText = wordNodes.length ? this.state.data[this.state.currentWordIdx] : '';
-    var currentScore = .99;
+    var currentSpeech = this.state.currentSpeech;
 
     return (
       <div className='reading-container'>
         <div className='reading' onClick={this.handleClick}>
           { wordNodes }
         </div>
-        <CurrentStatus text={currentWordText} score={currentScore} />
+        <CurrentStatus text={currentWordText} speech={currentSpeech} />
       </div>
     );
   }
