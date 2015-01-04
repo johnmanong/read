@@ -23,17 +23,19 @@ var CurrentStatus = React.createClass({
 
 var Word = React.createClass({
   getInitialState: function() {
-    return { current: false };
-  },
-
-  toggleCurrentWord: function(isCurrent) {
-    this.setState({ current: isCurrent });
+    return {
+      current: false,
+      state: ''
+    };
   },
 
   render: function() {
     var classes = React.addons.classSet({
       'reading__word': true,
-      'reading__word--current': this.props.current
+      'reading__word--current': this.props.current,
+      'reading__word--correct': this.props.state === 'correct',  // TODO enum
+      'reading__word--incorrect': this.props.state === 'incorrect',  // TODO enum
+      'reading__word--skipped': this.props.state === 'skipped',  // TODO enum
     });
 
     return (
@@ -52,15 +54,14 @@ var Reading = React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      currentWordIdx: 0
+      currentWordIdx: 0,
+      wordStates: {}
     };
   },
 
   componentDidMount: function() {
     this.loadCommentsFromServer();
     this.initSpeechRecognition();
-
-
   },
 
   initSpeechRecognition: function() {
@@ -84,9 +85,9 @@ var Reading = React.createClass({
     this.setState({data: data.snippets[0].text.split(' ')});
   },
 
-  // only here for testing
+  // used to skip a word
   handleClick: function(e) {
-    this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
+    this.skipCurrentWord();
   },
 
   handleSpeechResult: function(e) {
@@ -104,7 +105,6 @@ var Reading = React.createClass({
   handleInteriumSpeechInput: function(text) {
     text = text.trim();
     this.setState({ currentSpeech: text });
-    this.forceUpdate();
   },
 
   handleSpeechInput: function(text) {
@@ -112,15 +112,41 @@ var Reading = React.createClass({
     var words = text.split(' ');
 
     this.setState({ currentSpeech: text });
-    this.forceUpdate();
 
     words.forEach(function(word) {
       if (this.compareToCurrent_(word)) {
-        this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
-        this.forceUpdate();
+        this.setCurrentWordCorrect();
+        return;
       }
 
+      this.setCurrentWordIncorrect();
+
     }, this);
+  },
+
+  setCurrentWordCorrect: function() {
+    // TODO set state
+    this.setCurrentWordState('correct');  // TODO enum
+    this.moveToNextWord();
+  },
+
+  setCurrentWordIncorrect: function() {
+    this.setCurrentWordState('incorrect');  // TODO enum
+  },
+
+  skipCurrentWord: function() {
+    this.setCurrentWordState('skipped');  // TODO enum
+    this.moveToNextWord();
+  },
+
+  setCurrentWordState: function(state) {
+    var currentWordState = this.state.wordStates;
+    currentWordState[this.state.currentWordIdx] = state;
+    this.setState({ wordStates: currentWordState });
+  },
+
+  moveToNextWord: function() {
+    this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
   },
 
   // helper
@@ -137,9 +163,14 @@ var Reading = React.createClass({
   },
 
   render: function() {
+
+
     var wordNodes = this.state.data.map(function(word, idx) {
+      var isCurrent = idx === this.state.currentWordIdx;
+      var nodeState = this.state.wordStates[idx];
+
       return [
-        <Word text={word} current={ idx === this.state.currentWordIdx }/>,
+        <Word text={word} current={ isCurrent } state={ nodeState } />,
         <span> </span>
       ]
     }, this);
