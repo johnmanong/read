@@ -1,29 +1,39 @@
 ///////////////////// constants
 
 var Constants = {
+  // word result states
   CORRECT: 'correct',
   INCORRECT: 'incorrect',
   SKIPPED: 'skipped',
+  // speach input states
+  INTERIM: 'interim',
+  FINAL: 'final'
 }
 
 
 ///////////////////// CurrentStatus
 
 var CurrentStatus = React.createClass({
-
   render: function() {
+    var speechClasses = React.addons.classSet({
+      'reading__curent-status__speech': true,
+      'reading__curent-status__speech--interim': this.props.speechStatus === Constants.INTERIM,
+      'reading__curent-status__speech--final': this.props.speechStatus === Constants.FINAL
+    });
+
+    console.log(this.props.speechStatus);
+
     return (
       <div className="reading__curent-status">
         <div className="reading__curent-status__text">
           should say: {this.props.text}
         </div>
-        <div className="reading__curent-status__speech">
-          should said: {this.props.speech}
+        <div className={ speechClasses }>
+          you said: {this.props.speech}
         </div>
       </div>
     );
   }
-
 });
 
 
@@ -112,14 +122,20 @@ var Reading = React.createClass({
 
   handleInteriumSpeechInput: function(text) {
     text = text.trim();
-    this.setState({ currentSpeech: text });
+    this.setState({
+      currentSpeech: text,
+      speechStatus: Constants.INTERIM
+    });
   },
 
   handleSpeechInput: function(text) {
     text = text.trim();
     var words = text.split(' ');
 
-    this.setState({ currentSpeech: text });
+    this.setState({
+      currentSpeech: text,
+      speechStatus: Constants.FINAL
+    });
 
     words.forEach(function(word) {
       if (this.compareToCurrent_(word)) {
@@ -128,22 +144,20 @@ var Reading = React.createClass({
       }
 
       this.setCurrentWordIncorrect();
-
     }, this);
   },
 
   setCurrentWordCorrect: function() {
-    // TODO set state
-    this.setCurrentWordState(Constants.CORRECT);  // TODO enum
+    this.setCurrentWordState(Constants.CORRECT);
     this.moveToNextWord();
   },
 
   setCurrentWordIncorrect: function() {
-    this.setCurrentWordState(Constants.INCORRECT);  // TODO enum
+    this.setCurrentWordState(Constants.INCORRECT);
   },
 
   skipCurrentWord: function() {
-    this.setCurrentWordState(Constants.SKIPPED);  // TODO enum
+    this.setCurrentWordState(Constants.SKIPPED);
     this.moveToNextWord();
   },
 
@@ -153,11 +167,11 @@ var Reading = React.createClass({
     this.setState({ wordStates: currentWordState });
   },
 
+  // helpers
   moveToNextWord: function() {
     this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
   },
 
-  // helper
   formatWordForComparison: function(word) {
     return word.replace(/\W/g, '').toLowerCase();
   },
@@ -189,20 +203,21 @@ var Reading = React.createClass({
         <div className='reading' onClick={this.handleClick}>
           { wordNodes }
         </div>
-        <CurrentStatus text={currentWordText} speech={currentSpeech} />
+        <CurrentStatus text={currentWordText} speech={currentSpeech} speechStatus={ this.state.speechStatus } />
       </div>
     );
   }
 
 });
 
-///////////////////// Init
+
 ///////////////////// init speech recongition
 var recognition_ = new webkitSpeechRecognition();
 recognition_.continuous = true;
 recognition_.interimResults = true;
 
 React.render(
+  // TODO real data
   <Reading url='mock_data/pride_and_prejudice_1.json' recognition={recognition_}/>,
   document.getElementById('content')
 );

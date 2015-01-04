@@ -14,3 +14,11 @@
 .reading__word--skipped {
   color: #bdc3c7;
 }
+
+.reading__curent-status__speech--interim {
+  color: #bdc3c7;
+}
+
+.reading__curent-status__speech--final {
+  color: black;
+}
