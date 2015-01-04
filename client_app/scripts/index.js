@@ -1,5 +1,13 @@
-///////////////////// CurrentStatus
+///////////////////// constants
 
+var Constants = {
+  CORRECT: 'correct',
+  INCORRECT: 'incorrect',
+  SKIPPED: 'skipped',
+}
+
+
+///////////////////// CurrentStatus
 
 var CurrentStatus = React.createClass({
 
@@ -33,9 +41,9 @@ var Word = React.createClass({
     var classes = React.addons.classSet({
       'reading__word': true,
       'reading__word--current': this.props.current,
-      'reading__word--correct': this.props.state === 'correct',  // TODO enum
-      'reading__word--incorrect': this.props.state === 'incorrect',  // TODO enum
-      'reading__word--skipped': this.props.state === 'skipped',  // TODO enum
+      'reading__word--correct': this.props.state === Constants.CORRECT,
+      'reading__word--incorrect': this.props.state === Constants.INCORRECT,
+      'reading__word--skipped': this.props.state === Constants.SKIPPED,
     });
 
     return (
@@ -126,16 +134,16 @@ var Reading = React.createClass({
 
   setCurrentWordCorrect: function() {
     // TODO set state
-    this.setCurrentWordState('correct');  // TODO enum
+    this.setCurrentWordState(Constants.CORRECT);  // TODO enum
     this.moveToNextWord();
   },
 
   setCurrentWordIncorrect: function() {
-    this.setCurrentWordState('incorrect');  // TODO enum
+    this.setCurrentWordState(Constants.INCORRECT);  // TODO enum
   },
 
   skipCurrentWord: function() {
-    this.setCurrentWordState('skipped');  // TODO enum
+    this.setCurrentWordState(Constants.SKIPPED);  // TODO enum
     this.moveToNextWord();
   },
 
@@ -163,8 +171,6 @@ var Reading = React.createClass({
   },
 
   render: function() {
-
-
     var wordNodes = this.state.data.map(function(word, idx) {
       var isCurrent = idx === this.state.currentWordIdx;
       var nodeState = this.state.wordStates[idx];
