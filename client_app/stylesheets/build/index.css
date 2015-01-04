@@ -1,24 +1,20 @@
 .reading__word--current {
   text-decoration: underline;
-  font-weight: 700;
-}
+  font-weight: 700; }
 
 .reading__word--correct {
-  color: #1abc9c;
-}
+  color: #1abc9c; }
 
 .reading__word--incorrect {
-  color: #e74c3c;
-}
+  color: #e74c3c; }
 
 .reading__word--skipped {
-  color: #bdc3c7;
-}
+  color: #bdc3c7; }
 
 .reading__curent-status__speech--interim {
-  color: #bdc3c7;
-}
+  color: #bdc3c7; }
 
 .reading__curent-status__speech--final {
-  color: black;
-}
+  color: black; }
+
+/*# sourceMappingURL=index.css.map */

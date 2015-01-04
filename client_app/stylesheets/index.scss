@@ -1,0 +1,38 @@
+// variables
+
+//// colors
+$color-black: #000;
+$color-green: #1abc9c;
+$color-grey-light: #bdc3c7;
+$color-red: #e74c3c;
+
+//// font
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-semi-bold: 600;
+$font-weight-bold: 700;
+
+.reading__word--current {
+  text-decoration: underline;
+  font-weight: $font-weight-bold;
+}
+
+.reading__word--correct {
+  color: $color-green;
+}
+
+.reading__word--incorrect {
+  color: $color-red;
+}
+
+.reading__word--skipped {
+  color: $color-grey-light;
+}
+
+.reading__curent-status__speech--interim {
+  color: $color-grey-light;
+}
+
+.reading__curent-status__speech--final {
+  color: $color-black;
+}
