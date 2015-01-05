@@ -12,27 +12,38 @@ $font-weight-normal: 400;
 $font-weight-semi-bold: 600;
 $font-weight-bold: 700;
 
-.reading__word--current {
-  text-decoration: underline;
-  font-weight: $font-weight-bold;
-}
 
-.reading__word--correct {
-  color: $color-green;
-}
+.reading-container {
+  .reading__word--current {
+    text-decoration: underline; // temp
+    font-weight: $font-weight-bold;
+  }
 
-.reading__word--incorrect {
-  color: $color-red;
-}
+  .reading__word--correct {
+    color: $color-green;
+  }
 
-.reading__word--skipped {
-  color: $color-grey-light;
-}
+  .reading__word--incorrect {
+    color: $color-red;
+  }
 
-.reading__curent-status__speech--interim {
-  color: $color-grey-light;
-}
+  .reading__word--skipped {
+    color: $color-grey-light;
+  }
 
-.reading__curent-status__speech--final {
-  color: $color-black;
+  .reading__curent-status__speech--interim {
+    color: $color-grey-light;
+  }
+
+  .reading__curent-status__speech--final {
+    color: $color-black;
+  }
+
+  .reading-control__button {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline; // temp
+    }
+  }
 }

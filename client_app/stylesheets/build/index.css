@@ -1,20 +1,19 @@
-.reading__word--current {
+.reading-container .reading__word--current {
   text-decoration: underline;
   font-weight: 700; }
-
-.reading__word--correct {
+.reading-container .reading__word--correct {
   color: #1abc9c; }
-
-.reading__word--incorrect {
+.reading-container .reading__word--incorrect {
   color: #e74c3c; }
-
-.reading__word--skipped {
+.reading-container .reading__word--skipped {
   color: #bdc3c7; }
-
-.reading__curent-status__speech--interim {
+.reading-container .reading__curent-status__speech--interim {
   color: #bdc3c7; }
-
-.reading__curent-status__speech--final {
+.reading-container .reading__curent-status__speech--final {
   color: black; }
+.reading-container .reading-control__button {
+  cursor: pointer; }
+  .reading-container .reading-control__button:hover {
+    text-decoration: underline; }
 
 /*# sourceMappingURL=index.css.map */

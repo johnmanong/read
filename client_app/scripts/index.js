@@ -21,8 +21,6 @@ var CurrentStatus = React.createClass({
       'reading__curent-status__speech--final': this.props.speechStatus === Constants.FINAL
     });
 
-    console.log(this.props.speechStatus);
-
     return (
       <div className="reading__curent-status">
         <div className="reading__curent-status__text">
@@ -104,8 +102,13 @@ var Reading = React.createClass({
   },
 
   // used to skip a word
-  handleClick: function(e) {
+  handleClickSkipWord: function(e) {
     this.skipCurrentWord();
+  },
+
+  handleClickAllDone: function(e) {
+    // TODO render results
+    console.log('all done!');
   },
 
   handleSpeechResult: function(e) {
@@ -200,14 +203,21 @@ var Reading = React.createClass({
 
     return (
       <div className='reading-container'>
-        <div className='reading' onClick={this.handleClick}>
+        <div className='reading'>
           { wordNodes }
         </div>
         <CurrentStatus text={currentWordText} speech={currentSpeech} speechStatus={ this.state.speechStatus } />
+
+        <div className='reading-control__button reading-control__button--skip-word' onClick={this.handleClickSkipWord}>
+          Skip Word
+        </div>
+
+        <div className='reading-control__button reading-control__button--done' onClick={this.handleClickAllDone}>
+          All Done
+        </div>
       </div>
     );
   }
-
 });
 
 
