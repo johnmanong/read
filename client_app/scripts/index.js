@@ -5,6 +5,7 @@ var Constants = {
   CORRECT: 'correct',
   INCORRECT: 'incorrect',
   SKIPPED: 'skipped',
+
   // speach input states
   INTERIM: 'interim',
   FINAL: 'final'
@@ -111,8 +112,54 @@ var Reading = React.createClass({
   },
 
   handleClickAllDone: function(e) {
-    // TODO render results
-    console.log('all done!');
+    var allWordStates = this.state.wordStates;  // words user attempted
+    var allWordStatesKeys = Object.keys(allWordStates);
+
+    // calculate totals
+    var totalAttempted = allWordStatesKeys.length;
+    var totalWords = this.state.data.length;
+    var totalUnattempted = totalWords - totalAttempted;  // check for words completely skipped via 'all done'
+
+    var resultBuckets = {}
+    resultBuckets[Constants.CORRECT] = 0;
+    resultBuckets[Constants.INCORRECT] = 0;
+    resultBuckets[Constants.SKIPPED] = 0;
+    resultBuckets.unattempted = totalUnattempted;
+
+    allWordStatesKeys.forEach(function(wordStateKey) {
+      resultBuckets[this[wordStateKey]] += 1;
+    }, allWordStates);
+
+    function safePercent(amount, total) {
+      raw = total ? ((amount/total) * 100) : 0;
+      return Math.round(raw * 10) / 10;
+    }
+
+    var totalCorrect = resultBuckets[Constants.CORRECT]
+    var attemptedScore = safePercent(totalCorrect, totalAttempted);
+    var overallScore = safePercent(totalCorrect, totalWords);
+
+    // DEBUG
+    console.log('results:');
+    console.log('total:', totalWords);
+    console.log('total attempted:', totalAttempted);
+    console.log('total unattempted:', totalUnattempted);
+    console.log('correct:', resultBuckets[Constants.CORRECT]);
+    console.log('incorrect:', resultBuckets[Constants.INCORRECT]);
+    console.log('skipped:', resultBuckets[Constants.SKIPPED]);
+
+    console.log('attempted score:', attemptedScore);
+    console.log('overall score:', overallScore);
+
+
+    msg_partials = [
+      'Congrats!',
+      'You attempted ' + totalAttempted + ' of ' + totalWords + ' words and ' + 'got ' + totalCorrect + ' correct.',
+      'Your attempted score is ' + attemptedScore + '% and your overall score is ' + overallScore + '%.'
+    ]
+
+    alert(msg_partials.join('\n\n'));
+
   },
 
   handleSpeechResult: function(e) {
@@ -176,6 +223,12 @@ var Reading = React.createClass({
 
   // helpers
   moveToNextWord: function() {
+    // check if we're done here
+    if (this.state.currentWordIdx === this.state.data.length - 1) {
+      this.handleClickAllDone();
+      return;
+    }
+
     this.setState({ currentWordIdx: this.state.currentWordIdx += 1 });
   },
 
