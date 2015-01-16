@@ -4,6 +4,8 @@
 $color-black: #000;
 $color-green: #1abc9c;
 $color-grey-light: #bdc3c7;
+$color-grey-dark-blue: #34495e;
+$color-grey-blue: #2c3e50;
 $color-red: #e74c3c;
 
 //// font
@@ -12,8 +14,36 @@ $font-weight-normal: 400;
 $font-weight-semi-bold: 600;
 $font-weight-bold: 700;
 
+//// transitions
+$trans-time-quick: 200ms;
+$trans-time-normal: 400ms;
+$trans-time-slow: 600ms;
+
+// overrides compass
+@mixin box-shadow {
+    box-shadow: 0 6px 8px -8px rgba($color-black, .7);
+}
+
+body {
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  font-size: 24px;
+}
+
 
 .reading-container {
+  max-width: 940px;
+  margin: 0 auto;
+
+  .reading {
+    border: 1px solid $color-grey-light;
+    @include box-shadow;
+
+    margin-bottom: 2em;
+    padding: 1.5em;
+  }
+
   .reading__word--current {
     text-decoration: underline; // temp
     font-weight: $font-weight-bold;
@@ -38,12 +68,26 @@ $font-weight-bold: 700;
   .reading__curent-status__speech--final {
     color: $color-black;
   }
+}
 
-  .reading-control__button {
-    cursor: pointer;
+// components
+.reading-control__button {
+  @include box-shadow;
+  border: 1px solid $color-grey-blue;
+  color: $color-grey-dark-blue;
+  cursor: pointer;
+  display: inline-block;
+  margin: .2em;
+  padding: .3em;
+  transition: background-color $trans-time-quick,
+              color $trans-time-quick;
 
-    &:hover {
-      text-decoration: underline; // temp
-    }
+  &:hover {
+    background-color: lighten($color-grey-light, 20);
+    color: $color-black;
+  }
+
+  &:active {
+    background-color: lighten($color-grey-light, 19);
   }
 }
