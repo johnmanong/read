@@ -2,8 +2,10 @@
 
 //// colors
 $color-black: #000;
+$color-white: #fff;
 $color-green: #1abc9c;
 $color-grey-light: #bdc3c7;
+$color-grey: #95a5a6;
 $color-grey-dark-blue: #34495e;
 $color-grey-blue: #2c3e50;
 $color-red: #e74c3c;
@@ -20,8 +22,17 @@ $trans-time-normal: 400ms;
 $trans-time-slow: 600ms;
 
 // overrides compass
-@mixin box-shadow {
+@mixin box-shadow-default {
     box-shadow: 0 6px 8px -8px rgba($color-black, .7);
+}
+
+@mixin no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 body {
@@ -36,17 +47,17 @@ body {
   max-width: 940px;
   margin: 0 auto;
 
+  // reading
   .reading {
+    @include box-shadow-default;
     border: 1px solid $color-grey-light;
-    @include box-shadow;
-
-    margin-bottom: 2em;
+    line-height: 1.5;
     padding: 1.5em;
   }
 
   .reading__word--current {
-    text-decoration: underline; // temp
-    font-weight: $font-weight-bold;
+    border-bottom: 1px solid $color-grey-dark-blue;
+    // font-weight: $font-weight-bold;
   }
 
   .reading__word--correct {
@@ -68,11 +79,36 @@ body {
   .reading__curent-status__speech--final {
     color: $color-black;
   }
+
+  // current input
+  .reading__curent-status {
+    line-height: 1.5;
+    margin: 1.5em 0 1em;
+    padding: .5em;
+  }
+
+  .reading__curent-status__speech__prompt {
+    color: $color-grey;
+    float: left;
+  }
+
+  .reading__curent-status__speech__input {
+      border-bottom: 1px solid $color-grey-light;
+      margin-left: 110px;
+      padding: 0 .3em;
+  }
+
+  // controls
+  .reading-control__button--skip-word,
+  .reading-control__button--done {
+    float: right;
+  }
 }
 
 // components
 .reading-control__button {
-  @include box-shadow;
+  @include box-shadow-default;
+  @include no-select;
   border: 1px solid $color-grey-blue;
   color: $color-grey-dark-blue;
   cursor: pointer;

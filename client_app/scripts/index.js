@@ -21,13 +21,17 @@ var CurrentStatus = React.createClass({
       'reading__curent-status__speech--final': this.props.speechStatus === Constants.FINAL
     });
 
+    var currentSpeechInput = this.props.speech || '...';
+
     return (
       <div className="reading__curent-status">
-        <div className="reading__curent-status__text">
-          should say: {this.props.text}
-        </div>
         <div className={ speechClasses }>
-          you said: {this.props.speech}
+          <div className="reading__curent-status__speech__prompt">
+            you said:
+          </div>
+          <div className="reading__curent-status__speech__input">
+            {currentSpeechInput}
+          </div>
         </div>
       </div>
     );
@@ -198,7 +202,6 @@ var Reading = React.createClass({
       ]
     }, this);
 
-    var currentWordText = wordNodes.length ? this.state.data[this.state.currentWordIdx] : '';
     var currentSpeech = this.state.currentSpeech;
 
     return (
@@ -206,14 +209,14 @@ var Reading = React.createClass({
         <div className='reading'>
           { wordNodes }
         </div>
-        <CurrentStatus text={currentWordText} speech={currentSpeech} speechStatus={ this.state.speechStatus } />
-
-        <div className='reading-control__button reading-control__button--skip-word' onClick={this.handleClickSkipWord}>
-          Skip Word
-        </div>
-
-        <div className='reading-control__button reading-control__button--done' onClick={this.handleClickAllDone}>
-          All Done
+        <CurrentStatus speech={currentSpeech} speechStatus={ this.state.speechStatus } />
+        <div className='reading-controls'>
+          <div className='reading-control__button reading-control__button--done' onClick={this.handleClickAllDone}>
+            All Done
+          </div>
+          <div className='reading-control__button reading-control__button--skip-word' onClick={this.handleClickSkipWord}>
+            Skip Word
+          </div>
         </div>
       </div>
     );
