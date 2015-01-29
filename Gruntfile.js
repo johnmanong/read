@@ -22,6 +22,13 @@ module.exports = function(grunt) {
           livereload: true,
           base: 'client_app/'
         }
+      },
+      dist: {
+        options: {
+          livereload: false,
+          base: 'dist/',
+          keepalive: true
+        }
       }
     },
 
@@ -70,22 +77,39 @@ module.exports = function(grunt) {
         },
         files: JS_FILES
       }
+    },
+
+    copy: {
+      dist: {
+        files: [
+          {expand: true, cwd: 'client_app', src: ['mock_data/*'], dest: 'dist/', filter: 'isFile'},
+          {expand: true, cwd: 'client_app', src: ['scripts/build/*'], dest: 'dist/', filter: 'isFile'},
+          {expand: true, cwd: 'client_app', src: ['stylesheets/build/*'], dest: 'dist/', filter: 'isFile'},
+          {expand: true, cwd: 'client_app', src: ['index.html'], dest: 'dist/', filter: 'isFile'},
+        ]
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-takana');
 
-  grunt.registerTask('_build_dev', [
+  grunt.registerTask('_build:dev', [
     'sass:dev',
     'browserify:dev'
   ]);
 
+  grunt.registerTask('_build:dist', [
+    'sass:prod',
+    'browserify:prod'
+  ]);
+
   grunt.registerTask('default', [
-    '_build_dev',
+    '_build:dev',
     'connect:server',
     'watch'
   ]);
@@ -94,6 +118,12 @@ module.exports = function(grunt) {
     'connect:server',
     'watch'
   ])
+
+  grunt.registerTask('dist', [
+    '_build:dist',
+    'copy:dist',
+    'connect:dist'
+  ]);
 
 };
 
