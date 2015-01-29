@@ -1,4 +1,18 @@
 'use strcit';
+
+
+SASS_FILES = [{
+  expand: true,
+  cwd: 'client_app/stylesheets',
+  src: ['**/*.scss'],
+  dest: 'client_app/stylesheets/build',
+  ext: '.css',
+}]
+
+JS_FILES = {
+  'client_app/scripts/build/index.js': ['client_app/scripts/**/*.jsx']
+}
+
 module.exports = function(grunt) {
   // tasks here
   grunt.initConfig({
@@ -25,31 +39,53 @@ module.exports = function(grunt) {
         tasks: ['sass:dev']
       }
     },
+
     sass: {
       dev: {
         options: {
           sourcemap: true
         },
-        files: [
-        {
-          expand: true,
-          cwd: 'client_app/stylesheets',
-          src: ['**/*.scss'],
-          dest: 'client_app/stylesheets/build',
-          ext: '.css',
-        }
-        ]
+        files: SASS_FILES
+      },
+      prod: {
+        options: {
+          sourcemap: false
+        },
+        files: SASS_FILES
+      }
+    },
+
+    browserify: {
+      dev: {
+        options: {
+          debug: true,
+          transform: ['reactify']
+        },
+        files: JS_FILES
+      },
+      prod: {
+        options: {
+          debug: false,
+          transform: ['reactify']
+        },
+        files: JS_FILES
       }
     }
   });
 
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-takana');
 
-  grunt.registerTask('default', [
+  grunt.registerTask('_build_dev', [
     'sass:dev',
+    'browserify:dev'
+  ]);
+
+  grunt.registerTask('default', [
+    '_build_dev',
     'connect:server',
     'watch'
   ]);
