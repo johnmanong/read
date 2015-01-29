@@ -1,7 +1,17 @@
 'use strcit';
 
 
-SASS_FILES = {}
+SASS_FILES = [{
+  expand: true,
+  cwd: 'client_app/stylesheets',
+  src: ['**/*.scss'],
+  dest: 'client_app/stylesheets/build',
+  ext: '.css',
+}]
+
+JS_FILES = {
+  'client_app/scripts/build/index.js': ['client_app/scripts/**/*.jsx']
+}
 
 module.exports = function(grunt) {
   // tasks here
@@ -35,15 +45,13 @@ module.exports = function(grunt) {
         options: {
           sourcemap: true
         },
-        files: [
-        {
-          expand: true,
-          cwd: 'client_app/stylesheets',
-          src: ['**/*.scss'],
-          dest: 'client_app/stylesheets/build',
-          ext: '.css',
-        }
-        ]
+        files: SASS_FILES
+      },
+      prod: {
+        options: {
+          sourcemap: false
+        },
+        files: SASS_FILES
       }
     },
 
@@ -53,11 +61,15 @@ module.exports = function(grunt) {
           debug: true,
           transform: ['reactify']
         },
-        files: {
-          'client_app/scripts/build/index.js': ['client_app/scripts/**/*.jsx']
-        }
+        files: JS_FILES
+      },
+      prod: {
+        options: {
+          debug: false,
+          transform: ['reactify']
+        },
+        files: JS_FILES
       }
-
     }
   });
 
