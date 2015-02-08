@@ -3,3 +3,5 @@
 Read the displayed passage out loud!
 
 If you get stuck, pause for a moment and try again. If that doesn't work, you can always click to skip.
+
+[check it out here](johnmanong.com/projects/read/)
